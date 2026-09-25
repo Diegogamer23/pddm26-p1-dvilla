@@ -1,96 +1,70 @@
 import 'package:flutter/material.dart';
-import 'package:primer_parcial/models/categoria.dart';
 import 'package:primer_parcial/models/producto.dart';
-import 'package:primer_parcial/widget/categoria_item.dart';
 import 'package:primer_parcial/widget/producto_item.dart';
 import 'package:primer_parcial/services/product_service.dart';
+
 class HomeScreen extends StatefulWidget {
-  //constructor de la clase HomeScreen
-  //statful se crea automáticamente cuando se crea un widget que necesita mantener un estado mutable.
-  //stateful es para que se pueda cambiar el estado de la pantalla y stateless es para que no se pueda cambiar el estado de la pantalla
   const HomeScreen({super.key});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
-  //creando los objetos de la categorias
-} //terminacion de la clase HomeScreen principal
+}
 
 class _HomeScreenState extends State<HomeScreen> {
-  final List<Categoria> categorias = const [
-    Categoria('ropa', Icons.checkroom),
-    Categoria('Calzado', Icons.hiking),
-    Categoria('Juguetes', Icons.toys),
-    Categoria('Hogar', Icons.chair),
-    Categoria('Belleza', Icons.face_retouching_natural),
-    Categoria('Cocina', Icons.kitchen),
-    Categoria('Medicamento', Icons.storefront),
-  ];
-  //creando la lista de productos
   final ProductService _productService = ProductService();
-  late Future<List<Producto>> _futureProductos; // el late es para cargar los productos de manera asincrona y que no se carguen al inicio de la aplicacion
+  late Future<List<Producto>> _futureProductos;
 
   @override
   void initState() {
-    //Todo: implement initState
     super.initState();
-    _futureProductos = _productService.obtenerProductos(); //cargando los productos de manera asincrona solo una vez al inicio de la aplicacion
+    _futureProductos = _productService.obtenerProductos();
   }
 
   void _reintentarCarga() {
     setState(() {
-      _futureProductos = _productService.obtenerProductos(); //cargando los productos de manera asincrona en caso de error se puede reintentar la carga de los productos
+      _futureProductos = _productService.obtenerProductos();
     });
   }
-  /*
-  final List<Producto> productos = const [
-    Producto(
-      'Camisa',
-      399,
-      Icons.checkroom,
-    ), //google material para seleccionar los iconos
-    Producto('Zapatos', 1000, Icons.hiking),
-    Producto('Muñeca', 570, Icons.toys),
-    Producto('Silla', 1500, Icons.chair),
-    Producto('Maquillaje', 20, Icons.face_retouching_natural),
-    Producto('Medicamento', 10, Icons.storefront),
-  ];
-  */
 
-  //metodo para el boton flotante de la pantalla principal
-  void _mostrarMensajeAgergar() {
+  void _mostrarMensajeAgregar() {
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Opción para agregar producto')),
+      const SnackBar(
+        content: Text('Crear nuevo arreglo floral'),
+        backgroundColor: Colors.teal,
+      ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0xFFF9FAF8),
       floatingActionButton: FloatingActionButton(
-        onPressed: _mostrarMensajeAgergar,
-        backgroundColor: Colors.deepOrange,
+        onPressed: _mostrarMensajeAgregar,
+        backgroundColor: Colors.teal.shade700,
         child: const Icon(Icons.add, color: Colors.white),
       ),
       body: CustomScrollView(
         slivers: [
-          //diego andre villa vera
+          // AppBar temática botánica
           SliverAppBar(
-            expandedHeight: 120,
+            expandedHeight: 130,
             pinned: true,
-            backgroundColor: Colors.deepOrange,
+            backgroundColor: Colors.teal.shade800,
             flexibleSpace: FlexibleSpaceBar(
               title: const Text(
-                'Tienda App v2',
+                'Lion Flowers',
                 style: TextStyle(
                   fontSize: 16,
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
+                  letterSpacing: 0.5,
                 ),
               ),
               background: DecoratedBox(
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
-                    colors: [Colors.deepOrange, Colors.orangeAccent],
+                    colors: [Colors.teal.shade900, Colors.teal.shade500],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                   ),
@@ -98,11 +72,13 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
           ),
+
+          // Saludo y título de la sección de productos
           SliverPadding(
             padding: const EdgeInsets.all(16.0),
             sliver: SliverToBoxAdapter(
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -111,79 +87,80 @@ class _HomeScreenState extends State<HomeScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Hola Diego',
+                            '¡Hola Usuario!',
                             style: TextStyle(
-                              fontSize: 20,
+                              fontSize: 22,
                               fontWeight: FontWeight.bold,
+                              color: Color(0xFF1B3B2B),
                             ),
                           ),
+                          SizedBox(height: 4),
                           Text(
-                            'Que vamos a comprar hoy?',
+                            '¿Qué flores te interesan?',
                             style: TextStyle(
-                              fontSize: 16,
-                              color: Colors.blueGrey,
+                              fontSize: 15,
+                              color: Colors.black54,
                             ),
                           ),
                         ],
                       ),
                       CircleAvatar(
                         radius: 25,
-                        backgroundColor: const Color.fromARGB(255, 231, 106, 4),
-                        child: const Icon(Icons.person, color: Colors.white),
+                        backgroundColor: Colors.teal.shade100,
+                        child: Icon(Icons.person, color: Colors.teal.shade800),
                       ),
                     ],
                   ),
-                  SizedBox(height: 20),
-                  const Text(
-                    'Categorias',
-                    style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
-                  ),
-                  SizedBox(height: 12),
-                  SizedBox(
-                    height: 90,
-                    child: ListView.builder(
-                      scrollDirection: Axis.horizontal, //Diego Andre Villa Vera
-                      itemCount: categorias.length,
-                      itemBuilder: (context, index) {
-                        final categoria = categorias[index];
-                        return CategoriaItem(categoria: categoria);
-                      },
-                    ),
-                  ),
                   const SizedBox(height: 24),
                   const Text(
-                    "productos destacados",
-                    style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
+                    'Arreglos Destacados',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF1B3B2B),
+                    ),
                   ),
-                  SizedBox(height: 12),
+                  const SizedBox(height: 12),
                 ],
               ),
             ),
           ),
 
+          // Grid de arreglos / productos
           FutureBuilder<List<Producto>>(
             future: _futureProductos,
-            builder: ((context, snapshot) {
+            builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const SliverToBoxAdapter(
                   child: Padding(
                     padding: EdgeInsets.symmetric(vertical: 40.0),
-                    child: Center(child: CircularProgressIndicator()),
+                    child: Center(
+                      child: CircularProgressIndicator(color: Colors.teal),
+                    ),
                   ),
                 );
               } else if (snapshot.hasError) {
                 return SliverToBoxAdapter(
                   child: Padding(
                     padding: const EdgeInsets.all(24.0),
-
                     child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Icon(Icons.error, size: 48, color: Colors.red),
-                        const Text('Error al cargar los productos'),
-
-                        ElevatedButton(
+                        const Icon(Icons.error_outline, size: 48, color: Colors.redAccent),
+                        const SizedBox(height: 8),
+                        const Text(
+                          'No pudimos cargar el catálogo de flores',
+                          style: TextStyle(fontSize: 16, color: Colors.black87),
+                        ),
+                        const SizedBox(height: 12),
+                        ElevatedButton.icon(
                           onPressed: _reintentarCarga,
-                          child: const Text('Reintentar'),
+                          icon: const Icon(Icons.refresh),
+                          label: const Text('Reintentar'),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.teal,
+                            foregroundColor: Colors.white,
+                          ),
                         ),
                       ],
                     ),
@@ -191,7 +168,19 @@ class _HomeScreenState extends State<HomeScreen> {
                 );
               }
 
-              final productos = snapshot.data!;
+              final productos = snapshot.data ?? [];
+
+              if (productos.isEmpty) {
+                return const SliverToBoxAdapter(
+                  child: Center(
+                    child: Padding(
+                      padding: EdgeInsets.all(32.0),
+                      child: Text('No hay arreglos disponibles en este momento.'),
+                    ),
+                  ),
+                );
+              }
+
               return SliverPadding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 sliver: SliverGrid(
@@ -201,36 +190,20 @@ class _HomeScreenState extends State<HomeScreen> {
                     crossAxisSpacing: 16.0,
                     childAspectRatio: 0.75,
                   ),
-                  delegate: SliverChildBuilderDelegate((context, index) {
-                    return ProductoCard(producto: productos[index]);
-                  }, childCount: productos.length),
+                  delegate: SliverChildBuilderDelegate(
+                    (context, index) {
+                      return ProductoCard(producto: productos[index]);
+                    },
+                    childCount: productos.length,
+                  ),
                 ),
               );
-            }),
-
-            /*
-          SliverPadding(padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            sliver: SliverGrid(
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                mainAxisSpacing: 14.0,
-                crossAxisSpacing: 16.0,
-                childAspectRatio: 0.75,
-              ),
-              delegate: SliverChildBuilderDelegate(
-                (context, index) {
-                  return ProductoCard(producto: productos[index]);
-                },
-                childCount: productos.length,
-
-              ),
-            ),
+            },
           ),
-          */
-          ),
+
           const SliverToBoxAdapter(
-            child: SizedBox(height: 24),
-          ),  
+            child: SizedBox(height: 32),
+          ),
         ],
       ),
     );

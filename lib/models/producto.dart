@@ -1,27 +1,22 @@
-
 class Producto {
   final int id;
   final String nombre;
   final double precio;
-  final String categoria;
   final String imagenUrl;
-  
-  const Producto ({
+
+  const Producto({
     required this.id,
     required this.nombre,
     required this.precio,
-    required this.categoria,
     required this.imagenUrl,
-  }); 
-   //este es el constructorde la clase procucto
+  });
 
-factory Producto.fromJson(Map<String, dynamic> json) {
+  factory Producto.fromJson(Map<String, dynamic> json) {
     return Producto(
-      id: json['id'],
-      nombre: json['title'],
-      precio: (json['price']as num ).toDouble(),
-      categoria: json['category'],
-      imagenUrl: json['thumbnail'],
+      id: json['id'] as int? ?? 0,
+      nombre: json['nombre'] ?? json['title'] ?? 'Flor',
+      precio: (json['precio'] ?? json['price'] as num?)?.toDouble() ?? 0.0,
+      imagenUrl: json['imagenUrl'] ?? json['thumbnail'] ?? '',
     );
   }
 }
