@@ -73,7 +73,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
 
-          // Saludo y título de la sección de productos
+          
           SliverPadding(
             padding: const EdgeInsets.all(16.0),
             sliver: SliverToBoxAdapter(
@@ -126,7 +126,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
 
-          // Grid de arreglos / productos
+          
           FutureBuilder<List<Producto>>(
             future: _futureProductos,
             builder: (context, snapshot) {
